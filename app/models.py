@@ -1,5 +1,40 @@
 from django.db import models
 
+class Categoria(models.Model):
+    nome = models.CharField(max_length=100)
+    
+    class Meta:
+        verbose_name_plural = "Categorias"
+    
+    def __str__(self):
+        return self.nome
+    
+class Produto(models.Model):
+    nome = models.CharField(max_length=100)
+    fabricante = models.CharField(max_length=100)
+    imagem = models.ImageField(upload_to='static/', blank=True)
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name_plural = "Produtos"
+    
+    def __str__(self):
+        return f'{self.categoria} {self.nome}'
+    
+class Pessoa(models.Model):
+    nome = models.CharField(max_length=150)
+    nome_do_pai = models.CharField(max_length=150, blank=True, null=True)
+    nome_da_mae = models.CharField(max_length=150, blank=True, null=True)
+    cpf = models.CharField(max_length=11, unique=True)
+    data_nasc = models.DateField()
+    email = models.EmailField(unique=True)
+    cidade = models.ForeignKey('Cidade', on_delete=models.SET_NULL, null=True, blank=True)
+    ocupacao = models.ForeignKey('Ocupacao', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.nome
+
 class Cidade(models.Model):
     nome = models.CharField(max_length=100)
     uf = models.CharField(max_length=2)
@@ -9,19 +44,6 @@ class Cidade(models.Model):
 
 class Ocupacao(models.Model):
     nome = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nome
-
-class Pessoa(models.Model):
-    nome = models.CharField(max_length=150)
-    nome_do_pai = models.CharField(max_length=150, blank=True, null=True)
-    nome_da_mae = models.CharField(max_length=150, blank=True, null=True)
-    cpf = models.CharField(max_length=11, unique=True)
-    data_nasc = models.DateField()
-    email = models.EmailField(unique=True)
-    cidade = models.ForeignKey(Cidade, on_delete=models.SET_NULL, null=True, blank=True)
-    ocupacao = models.ForeignKey(Ocupacao, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.nome
