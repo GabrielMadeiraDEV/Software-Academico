@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciar Pessoas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+            padding: 20px;
+        }
+        .section {
+            width: 48%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form input, form select, form button {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Seção de listagem de pessoas -->
+    <div class="section">
+        <h2>Listagem de Pessoas</h2>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Email</th>
+                <th>Cidade</th>
+                <th>Ocupação</th>
+                <th>Ações</th>
+            </tr>
+            <!-- Iterar sobre a lista de pessoas enviada pela view do Django -->
+            {% for pessoa in pessoas %}
+            <tr>
+                <td>{{ pessoa.nome }}</td>
+                <td>{{ pessoa.cpf }}</td>
+                <td>{{ pessoa.email }}</td>
+                <td>{{ pessoa.cidade.nome }}</td>
+                <td>{{ pessoa.ocupacao.nome }}</td>
+                <td>
+                    <!-- Botão de edição com o id da pessoa para identificar -->
+                    <button onclick="editarPessoa({{ pessoa.id }})">Editar</button>
+                    <!-- Botão de exclusão com o id da pessoa para deletar -->
+                    <form action="{% url 'deletar_pessoa' pessoa.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Seção de formulários de cadastro e edição -->
+    <div class="section">
+        <!-- Formulário de Cadastro de Pessoa -->
+        <h2>Formulário de Cadastro de Pessoa</h2>
+        <form action="{% url 'cadastrar_pessoa' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="nome" placeholder="Nome" required>
+            <input type="text" name="nome_pai" placeholder="Nome do Pai" required>
+            <input type="text" name="nome_mae" placeholder="Nome da Mãe" required>
+            <input type="text" name="cpf" placeholder="CPF" required>
+            <input type="date" name="data_nasc" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <select name="cidade" required>
+                <option value="">Selecione a Cidade</option>
+                <option value="0">Nenhuma</option>
+                <!-- Iterar sobre a lista de cidades enviada pela view do Django -->
+                {% for cidade in cidades %}
+                    <option value="{{ cidade.id }}">{{ cidade.nome }}</option>
+                {% endfor %}
+            </select>
+            <select name="ocupacao" required>
+                <option value="">Selecione a Ocupação</option>
+                <option value="0">Nenhuma</option>
+                {% for ocupacao in ocupacoes %}
+                    <option value="{{ ocupacao.id }}">{{ ocupacao.nome }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Cadastrar Pessoa</button>
+        </form>
+
+        <h2>Formulário de Edição de Pessoa</h2>
+<form action="{% url 'gerenciar_pessoas' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="pessoa_id" value="{{ pessoa.id }}">
+    <input type="text" name="nome" value="{{ pessoa.nome }}" required>
+    <input type="text" name="nome_pai" value="{{ pessoa.nome_do_pai }}" required>
+    <input type="text" name="nome_mae" value="{{ pessoa.nome_da_mae }}" required>
+    <input type="text" name="cpf" value="{{ pessoa.cpf }}" required>
+    <input type="date" name="data_nasc" value="{{ pessoa.data_nasc }}" required>
+    <input type="email" name="email" value="{{ pessoa.email }}" required>
+    <select name="cidade">
+        <option value="">Selecione a Cidade</option>
+        {% for cidade in cidades %}
+            <option value="{{ cidade.id }}" {% if pessoa.cidade.id == cidade.id %}selected{% endif %}>
+                {{ cidade.nome }}
+            </option>
+        {% endfor %}
+    </select>
+    <select name="ocupacao">
+        <option value="">Selecione a Ocupação</option>
+        {% for ocupacao in ocupacoes %}
+            <option value="{{ ocupacao.id }}" {% if pessoa.ocupacao.id == ocupacao.id %}selected{% endif %}>
+                {{ ocupacao.nome }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit" name="editar">Salvar Alterações</button>
+</form>
+    </div>
+
+    <script>
+        function editarPessoa(pessoaId) {
+            // Obter os dados da pessoa selecionada (pode ser feito com AJAX, por exemplo)
+            // Para simplicidade, aqui estou usando valores estáticos
+            // Em uma implementação real, você poderia fazer uma chamada AJAX para buscar os dados da pessoa
+            
+            // Exemplo: para fins de demonstração, substitua pelos dados reais
+            var pessoaDados = {
+                id: pessoaId,
+                nome: "Nome Exemplo",
+                nome_pai: "Nome do Pai Exemplo",
+                nome_mae: "Nome da Mãe Exemplo",
+                cpf: "12345678900",
+                data_nasc: "2000-01-01",
+                email: "exemplo@email.com",
+                cidade_id: 1,  // Exemplo de ID da cidade
+                ocupacao_id: 1 // Exemplo de ID da ocupação
+            };
+
+            // Preencher os campos do formulário de edição
+            document.getElementById("id-editar").value = pessoaDados.id;
+            document.getElementById("nome-editar").value = pessoaDados.nome;
+            document.getElementById("nome_pai-editar").value = pessoaDados.nome_pai;
+            document.getElementById("nome_mae-editar").value = pessoaDados.nome_mae;
+            document.getElementById("cpf-editar").value = pessoaDados.cpf;
+            document.getElementById("data_nasc-editar").value = pessoaDados.data_nasc;
+            document.getElementById("email-editar").value = pessoaDados.email;
+            document.getElementById("cidade-editar").value = pessoaDados.cidade_id;
+            document.getElementById("ocupacao-editar").value = pessoaDados.ocupacao_id;
+
+            // Mostrar o formulário de edição
+            document.getElementById("form-editar").style.display = "block";
+        }
+    </script>
+</body>
+</html>

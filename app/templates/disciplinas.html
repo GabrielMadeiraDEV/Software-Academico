@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciar Disciplinas</title>
+</head>
+<body>
+    <h1>Gerenciamento de Disciplinas</h1>
+    <form>
+        <label for="nome_disciplina">Nome da Disciplina:</label><br>
+        <input type="text" id="nome_disciplina" name="nome_disciplina"><br><br>
+
+        <label for="area_saber">Área do Saber:</label><br>
+        <input type="text" id="area_saber" name="area_saber"><br><br>
+
+        <input type="submit" value="Salvar">
+    </form>
+    <br>
+    <a href="{% url 'index' %}">Voltar para Página Inicial</a>
+</body>
+</html>

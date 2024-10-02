@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciar Matrículas</title>
+</head>
+<body>
+    <h1>Gerenciamento de Matrículas</h1>
+    <form>
+        <label for="instituicao">Instituição:</label><br>
+        <input type="text" id="instituicao" name="instituicao"><br><br>
+
+        <label for="curso">Curso:</label><br>
+        <input type="text" id="curso" name="curso"><br><br>
+
+        <label for="pessoa">Pessoa:</label><br>
+        <input type="text" id="pessoa" name="pessoa"><br><br>
+
+        <label for="data_inicio">Data de Início:</label><br>
+        <input type="date" id="data_inicio" name="data_inicio"><br><br>
+
+        <label for="data_previsao_termino">Data Previsão de Término:</label><br>
+        <input type="date" id="data_previsao_termino" name="data_previsao_termino"><br><br>
+
+        <input type="submit" value="Salvar">
+    </form>
+    <br>
+    <a href="{% url 'index' %}">Voltar para Página Inicial</a>
+</body>
+</html>
