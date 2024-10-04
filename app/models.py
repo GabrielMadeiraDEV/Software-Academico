@@ -9,6 +9,16 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nome
     
+    
+class Curso(models.Model):
+    nome = models.CharField(max_length=100)
+
+class Periodo(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+    
 class Produto(models.Model):
     nome = models.CharField(max_length=100)
     fabricante = models.CharField(max_length=100)
@@ -79,12 +89,14 @@ class PeriodoCurso(models.Model):
     def __str__(self):
         return self.nome
 
+# models.py
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
-    area_saber = models.ForeignKey(AreaSaber, on_delete=models.SET_NULL, null=True, blank=True)
+    curso = models.ForeignKey('Curso', on_delete=models.CASCADE)  # Relacionamento com Curso
 
     def __str__(self):
         return self.nome
+
 
 class Matricula(models.Model):
     pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
@@ -130,17 +142,17 @@ class Ocorrencia(models.Model):
     def __str__(self):
         return f"{self.data} - {self.descricao}"
 
-class DisciplinaCurso(models.Model):
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
-    carga_horaria = models.IntegerField()
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    periodo = models.ForeignKey(PeriodoCurso, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.curso.nome} - {self.disciplina.nome}"
 
 class TipoAvaliacao(models.Model):
     nome = models.CharField(max_length=100)
 
     def __str__(self):
         return self.nome
+    
+class DisciplinaCurso(models.Model):
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    carga_horaria = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.curso} - {self.disciplina}"
